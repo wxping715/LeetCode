@@ -15,3 +15,23 @@ public:
         }
     }
 };
+
+
+class Solution {
+public:
+    /*
+    * one-pass soluation
+    * cnt represents the counter difference between result and the second result, if cnt == 0 , it means those numbers before has the same counter, so it's the time to remove those numbers and find the result from the remained elements.
+    */
+    int majorityElement(vector<int>& nums) {
+        if (nums.size() == 1) return nums[0];
+        
+        int cnt = 1, res = nums[0];
+        for (int i = 1; i < nums.size(); i++) {
+            if (cnt == 0) res = nums[i];
+            if (res == nums[i]) cnt++;
+            else cnt--;
+        }
+        return res;
+    }
+};
