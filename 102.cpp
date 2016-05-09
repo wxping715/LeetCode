@@ -10,35 +10,25 @@
 class Solution {
 public:
     vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>> res;
+        queue<TreeNode *> q;
+        TreeNode *p;
         
-        queue< pair<TreeNode*,int> > q;
-        vector<vector<int> > res;
-        pair<TreeNode *,int> p;
-        bool newrow = true;
-        
-        if(root == NULL) return res;
-        
-        q.push(make_pair(root,1));
-        while(!q.empty()){
-            p = q.front();
-            q.pop();
-            
-            if(newrow == true){
-                vector<int> v;
-                v.push_back(p.first->val);
-                res.push_back(v);
-                newrow = false;
-            }else{
-                int ind = p.second-1;
-                res[ind].push_back(p.first->val);
+        if (root == NULL) return res;
+        q.push(root);
+        while (!q.empty()) {
+            int size = q.size();
+            vector<int> v;
+            while (size--) {
+                p = q.front();
+                q.pop();
+                v.push_back(p->val);
+                
+                if (p->left != NULL) q.push(p->left);
+                if (p->right != NULL) q.push(p->right);
             }
-            
-            if(q.empty() || q.front().second != p.second) newrow = true;
-            
-            if(p.first->left != NULL) q.push(make_pair(p.first->left,p.second+1));
-            if(p.first->right != NULL) q.push(make_pair(p.first->right,p.second+1));
+            res.push_back(v);
         }
-        
         return res;
     }
 };
