@@ -1,0 +1,18 @@
+class Solution {
+public:
+    int mySqrt(int x) {
+       if (x < 0) return -1;
+       
+       int l = 0, r = x;
+       long long median;
+       while (l <= r) {
+           median = (r-l)/2+l;
+        //   cout << median << endl;
+        //   cout << median*median << " " << (median+1)*(median+1) << endl;
+           if (median*median <= x && (median+1)*(median+1) > x) return median;
+           else if (median*median < x) l = median+1;
+           else r = median-1;
+       }
+       return -1;
+    }
+};
