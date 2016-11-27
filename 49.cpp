@@ -1,23 +1,17 @@
 class Solution {
 public:
-    vector<string> anagrams(vector<string>& strs) {
-        map<string,int> anagrams;
-        vector<string> v;
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        unordered_map<string, multiset<string>> anagrams;
+        for (string s: strs) {
+            string t = s;
+            sort(t.begin(), t.end());
+            anagrams[t].insert(s);
+        }
         
-        for(int i = 0;i < strs.size();i++)
-        {
-            string s = strs[i];
-            sort(s.begin(),s.end());
-            if(anagrams.find(s) == anagrams.end())
-            {
-                anagrams[s] = i;
-            }else{
-                 if (anagrams[s] >= 0) {
-                     v.push_back(strs[anagrams[s]]);
-                     anagrams[s] = -1;
-                 }
-                 v.push_back(strs[i]);
-            }
+        vector<vector<string>> v;
+        for (auto mit : anagrams) {
+            vector<string> t(mit.second.begin(), mit.second.end());
+            v.push_back(t);
         }
         return v;
     }
