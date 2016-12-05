@@ -7,38 +7,34 @@ public:
         bool isfile = false;
         
         for (int i = 0; i < input.length(); i++) {
-             char ch = input[i];
-             if (ch == '\n') {
-                 if (tnum > level) {
-                     dirs.push(curdir);
-                     level = tnum;
-                     curLen += curdir.length();
-                 } else if (tnum <= level) {
-                     curLen = curLen - dirs.top().length() + curdir.length();
+            while (i < input.length() && input[i] != '\n') {
+                char ch = input[i++];
+                if (ch != '\t') {
+                    curdir.push_back(ch);
+                    if (ch == '.') isfile = true;
+                } else tnum++;
+            }
+            
+            if (tnum > level) {
+                 dirs.push(curdir);
+                 level = tnum;
+                 curLen += curdir.length();
+             } else {
+                 while (level >= tnum) {
+                     curLen = curLen - dirs.top().length();
                      dirs.pop();
-                     dirs.push(curdir);
-                     level = tnum;
+                     level--;
                  }
-                 curdir = "";
-                 tnum = 0;
-                 isfile = false;
-                 
-                 cout << dirs.size() << " " << curLen << endl;
-                 if (isfile) maxLen = max(maxLen, curLen);
+                 curLen += curdir.length();
+                 dirs.push(curdir);
+                 level = tnum;
              }
-             else if (ch == '\t') tnum++;
-             else if (ch == '.') isfile = true;
-             else {
-                 curdir.push_back(ch);
-             }
+             if (isfile) maxLen = max(maxLen, curLen+(int)dirs.size()-1);
+             
+             curdir = "";
+             tnum = 0;
+             isfile = false;
         }
-        
-        if (isfile) {
-            dirs.push(cur_dir);
-            curLen += curdir.length();
-            maxLen = max(curLen, maxLen);
-        }
-        
         return maxLen;
     }
 };
