@@ -1,22 +1,15 @@
 class Solution {
 public:
     int removeDuplicates(vector<int>& nums) {
-        int pre = 0x3f3f3f3f,cnt = 0,index = 0;
-        
-        while(index < nums.size()){
-            if(pre == nums[index]){
-                if(cnt < 2)  cnt++;
-                else{ 
-                    nums.erase(nums.begin()+index);
-                    continue;
-                }
-            }
-            else{
-                pre = nums[index];
-                cnt=1;
-            }
-            index++;
+        int pre = INT_MIN, cnt = 0, k = 0;
+        for (int i = 0; i < nums.size(); i++) {
+            if (nums[i] != pre) {
+                pre = nums[i];
+                cnt = 1;
+            } else cnt++;
+            
+            if (cnt <= 2) nums[k++] = nums[i];
         }
-        return nums.size();
+        return k;
     }
 };
