@@ -10,31 +10,31 @@
 class BSTIterator {
 public:
     BSTIterator(TreeNode *root) {
-        dfs(root);
-        it = values.begin();
+        p = root;
     }
 
     /** @return whether we have a next smallest number */
     bool hasNext() {
-        return it != values.end();
+        return (p || !s.empty());
     }
 
     /** @return the next smallest number */
     int next() {
-        return *(it++);
+        while (p) {
+           s.push(p);
+           p = p->left;
+        }
+        
+        p = s.top();
+        s.pop();
+        int val = p->val;
+        p = p->right;
+        return val;
     }
     
-    void dfs(TreeNode* node) {
-        if (node == NULL) return;
-        
-        dfs(node->left);
-        values.push_back(node->val);
-        dfs(node->right);
-    }
-
 private:
-    vector<int> values; 
-    vector<int>::iterator it;
+    stack<TreeNode*> s;
+    TreeNode* p;
 };
 
 /**
