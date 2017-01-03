@@ -14,14 +14,26 @@ Note: If the given node has no in-order successor in the tree, return null.
  */
 class Solution {
 public:
+    // TreeNode* inorderSuccessor(TreeNode* root, TreeNode* p) {
+    //     if (root == NULL)
+    //         return NULL;
+    //     if (root->val <= p->val)
+    //         return inorderSuccessor(root->right, p);
+    //     else {
+    //         TreeNode *res = inorderSuccessor(root->left, p);
+    //         return res == NULL ? root : res;
+    //     }
+    // }
+    
     TreeNode* inorderSuccessor(TreeNode* root, TreeNode* p) {
-        if (root == NULL)
-            return NULL;
-        if (root->val <= p->val)
-            return inorderSuccessor(root->right, p);
-        else {
-            TreeNode *res = inorderSuccessor(root->left, p);
-            return res == NULL ? root : res;
+        TreeNode* succ = NULL, *cur = root;
+        while (cur) {
+            if (p->val < cur->val) {
+                succ = cur;
+                cur = cur->left;
+            } else 
+                cur = cur->right;
         }
+        return succ;
     }
 };
