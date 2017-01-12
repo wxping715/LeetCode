@@ -9,33 +9,54 @@
  */
 class Solution {
 public:
+
+    // dfs
     vector<vector<int>> pathSum(TreeNode* root, int sum) {
-        vector<vector<int> > res;
-        vector<TreeNode* > path;
-        int psum = 0;
-        
-        if (root == NULL) return res;
-        dfs(root, res, path, psum, sum);
+        vector<vector<int>> res;
+        vector<int> path;
+        find(root, res, path, 0, sum);
+        return res;
     }
     
-    void dfs(TreeNode* root, vector<vector<int>>& res, vector<TreeNode *> &path, int& psum, int sum) {
-        path.push_back(root);
-        psum += root->val;
-        
-        if (root->left == NULL && root->right == NULL) {
-            if (psum == sum) {
-                vector<int> one;
-                for (int i = 0;i < path.size(); i++) one.push_back(path[i]->val);
-                res.push_back(one);
-            }
-            path.pop_back();
-            psum -= root->val;
-            return;
-        }
-    
-        if (root->left != NULL) dfs(root->left, res, path, psum, sum);
-        if (root->right != NULL) dfs(root->right, res, path, psum, sum);
+    void find(TreeNode* root, vector<vector<int>>& res, vector<int>& path, int sum, int target) {
+        if (!root) return;
+        sum += root->val;
+        path.push_back(root->val);
+        if (!root->left && !root->right && sum == target)
+            res.push_back(path);
+        if (root->left) find(root->left, res, path, sum, target);
+        if (root->right) find(root->right, res, path, sum, target);
         path.pop_back();
-        psum -= root->val;
+    }
+    
+    // iteratively
+    vector<vector<int>> pathSum(TreeNode* root, int sum) {
+        vector<vector<int>> res;
+        vector<TreeNode*> st;
+        TreeNode* cur = root, *pre = NULL;
+        int csum = 0;
+        while (cur || !st.empty()) {
+            while (cur) {
+                st.push_back(cur);
+                csum += cur->val;
+                cur = cur->left;
+            }
+            cur = st.back();
+            if (!cur->left && !cur->right && csum == sum) {
+                vector<int> path;
+                for (auto node : st)
+                    path.push_back(node->val);
+                res.push_back(path);
+            }
+            if (cur->right && cur->right != pre)
+                cur = cur->right;
+            else {
+                pre = cur;
+                csum -= cur->val;
+                st.pop_back();
+                cur = NULL;
+            }
+        }
+        return res;
     }
 };
