@@ -10,24 +10,22 @@
 class Solution {
 public:
     int pathSum(TreeNode* root, int sum) {
-        int res = 0;
-        vector<int> s;
-        dfs(root, sum, s, res);
+        int res = 0, csum = 0;
+        unordered_map<int, int> hash;
+        hash[0] = 1;
+        dfs(root, csum, sum, hash, res);
         return res;
     }
     
-    void dfs(TreeNode* root, int sum, vector<int>& s, int& res) {
+    void dfs(TreeNode* root, int csum, int target, unordered_map<int, int>& hash, int& res) {
         if (root == NULL) return;
+        csum += root->val;
+        if (hash.count(csum-target)) res += hash[csum-target];
+        hash[csum]++;
         
-        if (s.empty()) s.push_back(root->val);
-        else s.push_back(s.back()+root->val);
+        if (root->left) dfs(root->left, csum, target, hash, res);
+        if (root->right) dfs(root->right, csum, target, hash, res);
         
-        if (s.back() == sum) res++;
-        for (int i = 0; i+1 < s.size(); i++)
-            if (s.back() - s[i] == sum) res++;
-        
-        if (root->left) dfs(root->left, sum, s, res);
-        if (root->right) dfs(root->right, sum, s, res);
-        s.pop_back();
+        hash[csum]--;
     }
 };
