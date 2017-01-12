@@ -10,28 +10,24 @@
 class Solution {
 public:
     int pathSum(TreeNode* root, int sum) {
-        vector<int> s;
-        s.push_back(0);
-        
         int res = 0;
+        vector<int> s;
         dfs(root, sum, s, res);
         return res;
     }
     
-    void dfs(TreeNode* root, int sum, vector<int> s, int& res) {
+    void dfs(TreeNode* root, int sum, vector<int>& s, int& res) {
         if (root == NULL) return;
         
-        if (s.empty())  s.push_back(root->val);
+        if (s.empty()) s.push_back(root->val);
         else s.push_back(s.back()+root->val);
         
-        for (int i = 0; i < s.size()-1; i++) {
-            // cout << s[i] <<  " " << s.back*
+        if (s.back() == sum) res++;
+        for (int i = 0; i+1 < s.size(); i++)
             if (s.back() - s[i] == sum) res++;
-        }
-        if (root->left != NULL)
-            dfs(root->left, sum, s, res);
-        if (root->right != NULL)
-            dfs(root->right, sum, s, res);
+        
+        if (root->left) dfs(root->left, sum, s, res);
+        if (root->right) dfs(root->right, sum, s, res);
         s.pop_back();
     }
 };
