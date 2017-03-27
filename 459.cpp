@@ -20,7 +20,25 @@ Explanation: It's the substring "abc" four times. (And the substring "abcabc" tw
 
 class Solution {
 public:
+
+    /*
+    * O(N)
+    */
     bool repeatedSubstringPattern(string str) {
+        vector<int> next(str.length()+1, 0);
+        int j = 1, k = 0;
+        while (j < str.length()) {
+            if (str[j] == str[k]) next[++j] = ++k;
+            else if (k == 0) next[++j] = 0;
+            else k = next[k];
+        }
+        return (next[str.length()] != 0) && (str.length() % (str.length() - next[str.length()]) == 0);
+    }
+    
+    /*
+    * O(K*N)
+    */
+    /*bool repeatedSubstringPattern(string str) {
         int length = str.length(), k = length;
         for (k = length-1; k >= 1; k--) {
             if (length%k != 0) continue;
@@ -38,5 +56,5 @@ public:
             i++; j++;
         }
         return true;
-    }
+    }*/
 };
