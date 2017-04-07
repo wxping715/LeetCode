@@ -1,5 +1,9 @@
 class Solution {
 public:
+    
+    /*
+    * my solution
+    */
     int rangeBitwiseAnd(int m, int n) {
         unsigned int offset = 1;
         
@@ -14,5 +18,14 @@ public:
             else if (m+offset > n) res += offset;
         }
         return res;
+    }
+    
+    /*
+    * simplest way, find prefix of m and n
+    */
+    int rangeBitwiseAnd(int m, int n) {
+        int offset = INT_MAX;
+        while ((m&offset) != (n&offset)) offset <<= 1;
+        return m&offset;
     }
 };
