@@ -25,6 +25,33 @@ public:
         return qlists.back();
     }
     
+    /*
+    * nk*logk: priority_queue method
+    */
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        priority_queue<ListNode*, vector<ListNode*>, Comparison> pq;
+        for (auto head : lists) {
+            if (head) pq.push(head);
+        }
+        
+        ListNode* head = NULL, *rear = NULL;
+        while (!pq.empty()) {
+            auto cur = pq.top();
+            // cout << cur->val << endl;
+            
+            pq.pop();
+            if (cur->next) pq.push(cur->next);
+            
+            // process current value
+            if (head == NULL) head = cur;
+            else rear->next = cur;
+            rear = cur;
+            
+            cur->next = NULL;
+        }
+        return head;
+    }
+    
     ListNode *mergeTwoLists(ListNode* &a, ListNode* &b) {
         if (a == NULL) return b;
         if (b == NULL) return a;
