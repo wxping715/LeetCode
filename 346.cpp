@@ -5,27 +5,31 @@ MovingAverage m = new MovingAverage(3);
 m.next(1) = 1
 m.next(10) = (1 + 10) / 2
 m.next(3) = (1 + 10 + 3) / 3
-m.next(5) = (10 + 3 + 5) / 3*/
+m.next(5) = (10 + 3 + 5) / 3
+*/
 
 class MovingAverage {
 public:
     /** Initialize your data structure here. */
     MovingAverage(int size) {
-        wsize = size;
-        sum = 0;
+        this->size = size;
+        this->sum = 0;
     }
     
     double next(int val) {
-        vals.push_back(val);
         sum += val;
-        if (vals.size() > wsize)
-            sum -= vals[vals.size()-wsize-1];
-        int length = vals.size() > wsize ? wsize : vals.size();
-        return sum*1.0/length;
+        nums.push_back(val);
+        if (nums.size() > size) {
+            sum -= nums.front();
+            nums.pop_front();
+        }
+        
+        return sum*1.0/nums.size();
     }
+    
 private:
-    vector<int> vals;
-    int wsize;
+    deque<int> nums;
+    int size;
     int sum;
 };
 
