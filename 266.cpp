@@ -1,17 +1,23 @@
+/*
+Given a string, determine if a permutation of the string could form a palindrome.
+
+For example,
+"code" -> False, "aab" -> True, "carerac" -> True.
+*/
+
 class Solution {
 public:
     bool canPermutePalindrome(string s) {
-        int hash[256] = {0};
-        for (char ch : s) 
-            hash[ch]++;
+        unordered_map<char, int> hashmap;
+        for (char ch : s)
+            hashmap[ch]++;
         
-        bool odd = false;
-        for (int i = 0; i < 256; i++) {
-            if (hash[i]&1) {
-                if (!odd) odd = true;
-                else return false;
-            }
-        }
-        return true;
+        int odd = 0;
+        for (auto it : hashmap)
+            if (it.second & 1)
+                odd++;
+        
+        if (odd <= 1) return true;
+        return false;
     }
 };
