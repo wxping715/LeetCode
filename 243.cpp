@@ -13,31 +13,6 @@ You may assume that word1 does not equal to word2, and word1 and word2 are both 
 
 class Solution {
 public:
-    // int shortestDistance(vector<string>& words, string word1, string word2) {
-    //     unordered_map<string, vector<int>> hash;
-    //     for (int i = 0; i < words.size(); i++) {
-    //         hash[words[i]].push_back(i);
-    //     }
-        
-    //     vector<int> idx1 = hash.find(word1)->second;
-    //     vector<int> idx2 = hash.find(word2)->second;
-        
-    //     int res = words.size();
-    //     int i = 0, j = 0;
-    //     while (i < idx1.size() && j < idx2.size()) {
-    //         while (i < idx1.size() && idx1[i] < idx2[j]) {
-    //             res = min(res, abs(idx1[i]-idx2[j]));
-    //             i++;
-    //         }
-            
-    //         while (j < idx2.size() && idx2[j] < idx1[i]) {
-    //             res = min(res, abs(idx1[i]-idx2[j]));
-    //             j++;
-    //         }
-    //     }
-        
-    //     return res;
-    // }
     
     int shortestDistance(vector<string>& words, string word1, string word2) {
         int idx1 = -1, idx2 = -1, res = words.size();
@@ -47,6 +22,19 @@ public:
             
             if (idx1 != -1 && idx2 != -1)
                 res = min(res, abs(idx1-idx2));
+        }
+        return res;
+    }
+    
+    // one pointer
+    int shortestDistance(vector<string>& words, string word1, string word2) {
+        int i = -1, j = 0, res = words.size();
+        for (; j < words.size(); j++) {
+            if (word1 == words[j] || word2 == words[j]) {
+                if (i != -1 && words[i] != words[j])
+                    res = min(res, j-i);
+                i = j;
+            }
         }
         return res;
     }
