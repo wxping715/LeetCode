@@ -21,7 +21,6 @@ public:
                 s = interval.start;
                 e = interval.end;
             } else {
-                s = min(interval.start, s);
                 e = max(interval.end, e);
             }
         }
