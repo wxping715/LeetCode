@@ -1,5 +1,8 @@
 /*
 Merge two sorted linked lists and return it as a new list. The new list should be made by splicing together the nodes of the first two lists.
+
+follow up: what if store the repeated only once
+compare with pre value.
 */
 
 /**
@@ -10,6 +13,7 @@ Merge two sorted linked lists and return it as a new list. The new list should b
  *     ListNode(int x) : val(x), next(NULL) {}
  * };
  */
+
 class Solution {
 public:
     ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
@@ -23,7 +27,6 @@ public:
                 p = p2;
                 p2 = p2->next;
             }
-            
             
             if (rear == NULL) head = p;
             else rear->next = p;
