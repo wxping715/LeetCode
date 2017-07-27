@@ -14,6 +14,7 @@ To generate all distinct permutations of a (half of) string, use a similar appro
 
 class Solution {
 public:
+    // iterative
     vector<string> generatePalindromes(string s) {
         int hash[256] = {0};
         for (char ch : s)
@@ -39,5 +40,44 @@ public:
             res.push_back(half + (odd ? oddch : "" ) + shalf);
         } while (next_permutation(half.begin(), half.end()));
         return res;
+    }
+    
+    vector<string> generatePalindromes(string s) {
+        unordered_map<char, int> hashmap;
+        vector<string> res;
+        for (char ch : s) {
+            hashmap[ch]++;
+        }
+        
+        char och = -1;
+        for (auto it : hashmap)
+            if (it.second & 1) {
+                if (och == -1) och = it.first;
+                else return res;
+            }
+        
+        string t = "";
+        if (och != -1) {
+            t.push_back(och);
+            hashmap[och]--;
+        }
+        
+        generate(hashmap, t, res);
+        return res;
+    }
+    
+    // backtracing
+    void generate(unordered_map<char, int>& hashmap, string s, vector<string>& res) {
+        bool found = false;
+        for (auto it : hashmap) {
+            if (it.second) {
+                found = true;
+                hashmap[it.first] -= 2;
+                generate(hashmap, it.first+s+it.first, res);
+                hashmap[it.first] += 2;
+            }
+        }
+        
+        if (!found) res.push_back(s);
     }
 };
