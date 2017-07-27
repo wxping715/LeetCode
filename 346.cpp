@@ -6,6 +6,10 @@ m.next(1) = 1
 m.next(10) = (1 + 10) / 2
 m.next(3) = (1 + 10 + 3) / 3
 m.next(5) = (10 + 3 + 5) / 3
+
+follow up: what if we need get medium at the same time.
+(1): two heaps: insert is O(logN), get is O(1)
+(2): quick select: insert is O(1), get is O(N*log(N))
 */
 
 class MovingAverage {
