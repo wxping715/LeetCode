@@ -1,9 +1,13 @@
 class Solution {
 public:
-    int titleToNumber(string s) {
-        int ans = 0,l = s.length();
-        for(int i = 0;i < l;i++)
-            ans = ans*26 + (s[i]-'A'+1);
-        return ans;
+    string convertToTitle(int n) {
+        string res = "";
+        while (n) {
+            n--;
+            res.push_back('A'+n%26);
+            n /= 26;
+        }
+        reverse(res.begin(), res.end());
+        return res;
     }
 };
