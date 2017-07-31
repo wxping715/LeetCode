@@ -1,19 +1,26 @@
-int findMin(int num[], int n) {
-    
-    if(n == 1) return num[0];
-    if(n == 2) return num[0]<num[1] ? num[0] : num[1];
-    
-    int f = 0,r = n - 1,mid;
-    
-    while(f < r){
-        mid = (f+r) / 2;
-        
-        if(num[f] > num[mid] && num[mid] > num[r]) return num[r];
-        else if(num[f] < num[mid] && num[mid] < num[r]) return num[f];
-        
-        if(num[f] > num[mid]) r = mid;
-        else if(num[f] < num[mid]) f = mid;
-        else return num[f] < num[r] ? num[f] : num[r];
+/*
+Suppose an array sorted in ascending order is rotated at some pivot unknown to you beforehand.
+
+(i.e., 0 1 2 4 5 6 7 might become 4 5 6 7 0 1 2).
+
+Find the minimum element.
+
+You may assume no duplicate exists in the array.
+*/
+
+class Solution {
+public:
+    int findMin(vector<int>& nums) {
+        int l = 0, r = nums.size()-1;
+        while (l < r) {
+        	if (nums[l] < nums[r])
+        		return nums[l];
+        	
+            int m = (l+r)/2;
+        	// must be increase, decrese
+        	if (nums[l] <= nums[m]) l = m+1;
+        	else r = m;
+        }
+        return nums[l];
     }
-    return num[f];
-}
+};
