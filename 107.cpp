@@ -1,3 +1,21 @@
+/*
+Given a binary tree, return the bottom-up level order traversal of its nodes' values. (ie, from left to right, level by level from leaf to root).
+
+For example:
+Given binary tree [3,9,20,null,null,15,7],
+    3
+   / \
+  9  20
+    /  \
+   15   7
+return its bottom-up level order traversal as:
+[
+  [15,7],
+  [9,20],
+  [3]
+]
+*/
+
 /**
  * Definition for a binary tree node.
  * struct TreeNode {
@@ -10,43 +28,26 @@
 class Solution {
 public:
     vector<vector<int>> levelOrderBottom(TreeNode* root) {
+        vector<vector<int>> res;
+        queue<TreeNode *> q;
+        TreeNode *p;
         
-        queue< pair<TreeNode*,int> > q;
-        vector<vector<int> > res;
-        pair<TreeNode *,int> p;
-        bool newrow = true;
-        
-        if(root == NULL) return res;
-        
-        q.push(make_pair(root,1));
-        while(!q.empty()){
-            p = q.front();
-            q.pop();
-            
-            if(newrow == true){
-                vector<int> v;
-                v.push_back(p.first->val);
-                res.push_back(v);
-                newrow = false;
-            }else{
-                int ind = p.second-1;
-                res[ind].push_back(p.first->val);
+        if (root == NULL) return res;
+        q.push(root);
+        while (!q.empty()) {
+            int size = q.size();
+            vector<int> v;
+            while (size--) {
+                p = q.front();
+                q.pop();
+                v.push_back(p->val);
+                
+                if (p->left != NULL) q.push(p->left);
+                if (p->right != NULL) q.push(p->right);
             }
-            
-            if(q.empty() || q.front().second != p.second) newrow = true;
-            
-            if(p.first->left != NULL) q.push(make_pair(p.first->left,p.second+1));
-            if(p.first->right != NULL) q.push(make_pair(p.first->right,p.second+1));
+            res.push_back(v);
         }
-        
-        vector<int> v;
-        int len = res.size();
-        for(int i = 0;i < len/2;i++){
-            v = res[i];
-            res[i] = res[len-1-i];
-            res[len-1-i] = v;
-        }
-        
+        reverse(res.begin(), res.end());
         return res;
     }
 };
