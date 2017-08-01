@@ -14,22 +14,22 @@ class Solution {
 public:
     int minSubArrayLen(int s, vector<int>& nums) {
         int l = 0, r = -1, sum = 0, res = nums.size();
-	bool found = false;
-	if (s == 0) return 0;
-	if (nums.empty()) return 0;
-	while (r < (int)nums.size()) {
-		if (sum >= s) {
-			if (sum == s) {
-				found = true;
+		
+        bool found = false;
+		if (s == 0) return 0;
+		if (nums.empty()) return 0;
+        
+		while (r < (int)nums.size()) {
+			if (sum >= s) {
 				res = min(r-l+1, res);
+                found = true;
+				sum -= nums[l++];
+			} else {
+				sum += nums[++r];
 			}
-			sum -= nums[l++];
-		} else {
-			sum += nums[++r];
+            // cout << l << " " << r << " " << sum << endl;
 		}
-    // cout << l << " " << r << " " << sum << endl;
-	}
-
-	return found ? res : 0;
+		
+		return found ? res : 0;
     }
 };
