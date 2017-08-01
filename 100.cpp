@@ -1,26 +1,17 @@
-/*
-Given two binary trees, write a function to check if they are equal or not.
-
-Two binary trees are considered equal if they are structurally identical and the nodes have the same value.
-*/
-
 /**
- * Definition for binary tree
+ * Definition for a binary tree node.
  * struct TreeNode {
  *     int val;
- *     struct TreeNode *left;
- *     struct TreeNode *right;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
  * };
  */
-bool isSameTree(struct TreeNode *p, struct TreeNode *q) {
-    
-    if(p == NULL && q == NULL) return true;
-    if(p != NULL && q != NULL){
-        if(p->val != q->val) return false;
-        if(!isSameTree(p->left,q->left)) return false;
-        if(!isSameTree(p->right,q->right)) return false;
+class Solution {
+public:
+    bool isSameTree(TreeNode* p, TreeNode* q) {
+        if (!p || !q) return p == q;
         
-        return true;
+        return (p->val == q->val) && isSameTree(p->left, q->left) && isSameTree(p->right, q->right);
     }
-    return false;
-}
+};
