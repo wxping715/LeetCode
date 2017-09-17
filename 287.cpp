@@ -1,23 +1,31 @@
+/*
+Given an array nums containing n + 1 integers where each integer is between 1 and n (inclusive), prove that at least one duplicate number must exist. Assume that there is only one duplicate number, find the duplicate one.
+
+Note:
+You must not modify the array (assume the array is read only).
+You must use only constant, O(1) extra space.
+Your runtime complexity should be less than O(n2).
+There is only one duplicate number in the array, but it could be repeated more than once.
+Credits:
+Special thanks to @jianchao.li.fighter for adding this problem and creating all test cases.
+*/
+
 class Solution {
 public:
+    
+    // binary search by value
     int findDuplicate(vector<int>& nums) {
-        int n = nums.size()-1;
-        int l = 1, r = n, mid;
-        while (l <= r) {
-            mid = (r-l)/2+l;
-            int cnt1 = 0, cnt2 = 0, total = 0;
-            for (int num : nums) {
-                if (num < l || num > r) continue;
-                total++;
-                if (num < mid) cnt1++;
-                else if (num > mid) cnt2++;
-            }
+        int l = 1, r = nums.size()-1;
+        while (l < r) {
+            int m = (r-l)/2+l;
             
-            if (total-cnt1-cnt2 > 1) return mid;
-            if (cnt1 > cnt2 || (((total-1)&1)==0 && cnt1==cnt2)) r = mid-1;
-            else l = mid+1;
-            // cout << mid << " " << cnt1 << " " << cnt2 << " " << total << endl;
+            int cnt = 0;
+            for (int num : nums)
+                if (num <= m)
+                    cnt++;
+            if (cnt > m) r = m;
+            else l = m+1;
         }
-        return -1;
+        return l;
     }
 };
