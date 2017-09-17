@@ -1,3 +1,19 @@
+/*
+Given a nested list of integers, implement an iterator to flatten it.
+
+Each element is either an integer, or a list -- whose elements may also be integers or other lists.
+
+Example 1:
+Given the list [[1,1],2,[1,1]],
+
+By calling next repeatedly until hasNext returns false, the order of elements returned by next should be: [1,1,2,1,1].
+
+Example 2:
+Given the list [1,[4,[6]]],
+
+By calling next repeatedly until hasNext returns false, the order of elements returned by next should be: [1,4,6].
+*/
+
 /**
  * // This is the interface that allows for creating nested lists.
  * // You should not implement it, or speculate about its implementation
@@ -15,77 +31,33 @@
  *     const vector<NestedInteger> &getList() const;
  * };
  */
-// class NestedIterator {
-// public:
-    
-//     NestedIterator(vector<NestedInteger> &nestedList) {
-//         numbers = decode(nestedList);
-//         idx = 0;
-//     }
-    
-//     // dfs version
-//     vector<int> decode(vector<NestedInteger> &nestedList) {
-//         vector<int> res;
-//         for (auto nint : nestedList) {
-//             if (nint.isInteger()) res.push_back(nint.getInteger());
-//             else {
-//                 vector<int> t = decode(nint.getList());
-//                 res.insert(res.end(), t.begin(), t.end());
-//             }
-//         }
-//         return res;
-//     }
-    
-//     int next() {
-//         return numbers[idx++];
-//     }
-
-//     bool hasNext() {
-//         return idx < numbers.size();
-//     }
-    
-// private:
-//     vector<int> numbers;
-//     int idx;
-    
-// };
-
 class NestedIterator {
 public:
-    
     NestedIterator(vector<NestedInteger> &nestedList) {
-        for (auto rit = nestedList.rbegin(); rit != nestedList.rend(); rit++) 
-            s.push(*rit);
+        for (auto it = nestedList.rbegin(); it != nestedList.rend(); it++)
+            s.push(*it);
     }
-    
+
     int next() {
-        NestedInteger nint = s.top();
+        auto v = s.top();
         s.pop();
-        return nint.getInteger();
+        return v.getInteger();
     }
 
     bool hasNext() {
-        while (!s.empty()) {
-            NestedInteger nint = s.top();
-            
-            if (nint.isInteger()) return true;
-            vector<NestedInteger> nList = nint.getList();
+        while (!s.empty() && !s.top().isInteger()) {
+            auto ni = s.top().getList();
             s.pop();
-            for (auto rit = nList.rbegin(); rit != nList.rend(); rit++)
-                s.push(*rit);
+            for (auto it = ni.rbegin(); it != ni.rend(); it++)
+                s.push(*it);
         }
-        return false;
+            
+        return !s.empty();
     }
     
 private:
     stack<NestedInteger> s;
 };
-
-/**
- * Your NestedIterator object will be instantiated and called as such:
- * NestedIterator i(nestedList);
- * while (i.hasNext()) cout << i.next();
- */
 
 /**
  * Your NestedIterator object will be instantiated and called as such:
