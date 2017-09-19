@@ -63,7 +63,7 @@ public:
             } else {
                 ++r;
                 if (r < sortedNums.size())
-                    hashmap[sortedNums[++r].second]++;
+                    hashmap[sortedNums[r].second]++;
             }
         }
         
