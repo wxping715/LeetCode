@@ -1,39 +1,34 @@
 class Solution {
 public:
-    string minWindow(string s, string t) {
-        if (s.empty() || t.empty()) return "";
-        
-        int hash[256] = {0}, cur[256] = {0};
-        for (char ch : t)
-            hash[ch]++;
-        
-        string ret = s;
-        int lidx = 0, cidx = 0;
-        bool found = false;
-        while (cidx < s.length()) {
-            cur[s[cidx]]++;
-            if (compare(hash, cur)) {
-                found = true;
-                while (lidx < cidx && compare(hash, cur)) {
-                    //try to move lidx
-                    cur[s[lidx]]--;
-                    // if failed, restore it
-                    if (!compare(hash, cur)) {
-                        cur[s[lidx]]++;
-                        break;
-                    }
-                    lidx++;
-                }
-                ret = ret.length() > cidx-lidx+1 ? s.substr(lidx, cidx-lidx+1) : ret;
+    
+    bool check(int d[256], int c[256]) {
+        for (int i = 0; i < 256; i++)
+            if (d[i] > c[i]) {
+                return false;
             }
-            cidx++;
-        }
-        return found ? ret : "";
+        return true;
     }
     
-    bool compare(int hash[256], int cur[256]) {
-        for (int i = 0; i < 256; i++)
-            if (hash[i] > cur[i]) return false;
-        return true;
+    string minWindow(string s, string t) {  
+        int d[256] = {0}, c[256] = {0};
+        for (char ch : t)
+            d[ch]++;
+        
+        int l = 0, r = -1, ml, mr, minl = s.size()+1;
+        while (r < (int)s.length()) {
+            if (check(d, c)) {
+                if (r-l+1 < minl) {
+                    ml = l;
+                    mr = r;
+                    minl = r-l+1;
+                }
+                c[s[l++]]--;
+            } else {
+                if (++r < s.length())
+                    c[s[r]]++;
+            }
+        }
+        
+        return minl == s.size()+1 ? "" : s.substr(ml, mr-ml+1);
     }
 };
