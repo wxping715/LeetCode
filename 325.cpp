@@ -31,17 +31,21 @@ public:
     //     return res;
     // }
     
+    class Solution {
+public:    
     int maxSubArrayLen(vector<int>& nums, int k) {
         unordered_map<int, int> hashmap;
-        int sum = 0, res = 0;
+        hashmap[0] = -1;
+        int sum = 0, r = 0;
         for (int i = 0; i < nums.size(); i++) {
             sum += nums[i];
-            if (sum == k) res = max(res, i+1);
-            else if (hashmap.find(sum-k) != hashmap.end())
-                res = max(res, i-hashmap[sum-k]);
-            if (hashmap.find(sum) == hashmap.end())
+            if (hashmap.count(sum-k))
+                r = max(i - hashmap[sum-k], r);
+            
+            if (!hashmap.count(sum))
                 hashmap[sum] = i;
         }
-        return res;
+        return r;
     }
+};
 };
