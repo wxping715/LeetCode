@@ -1,3 +1,34 @@
+/*
+Design a data structure that supports all following operations in average O(1) time.
+
+Note: Duplicate elements are allowed.
+insert(val): Inserts an item val to the collection.
+remove(val): Removes an item val from the collection if present.
+getRandom: Returns a random element from current collection of elements. The probability of each element being returned is linearly related to the number of same value the collection contains.
+Example:
+
+// Init an empty collection.
+RandomizedCollection collection = new RandomizedCollection();
+
+// Inserts 1 to the collection. Returns true as the collection did not contain 1.
+collection.insert(1);
+
+// Inserts another 1 to the collection. Returns false as the collection contained 1. Collection now contains [1,1].
+collection.insert(1);
+
+// Inserts 2 to the collection, returns true. Collection now contains [1,1,2].
+collection.insert(2);
+
+// getRandom should return 1 with the probability 2/3, and returns 2 with the probability 1/3.
+collection.getRandom();
+
+// Removes 1 from the collection, returns true. Collection now contains [1,2].
+collection.remove(1);
+
+// getRandom should return 1 and 2 both equally likely.
+collection.getRandom();
+*/
+
 class RandomizedCollection {
 public:
     /** Initialize your data structure here. */
@@ -7,37 +38,50 @@ public:
     
     /** Inserts a value to the collection. Returns true if the collection did not already contain the specified element. */
     bool insert(int val) {
+        bool res = false;
+        if (!hashmap.count(val)) res = true;
+        int idx = nums.size();
         nums.push_back(val);
-        hash[val].insert(nums.size()-1);
+        hashmap[val].insert(idx);
         
-        cout << nums.size() << endl;
-        return hash[val].size() == 1;
+        return res;
     }
     
     /** Removes a value from the collection. Returns true if the collection contained the specified element. */
     bool remove(int val) {
-        if (hash.count(val) == 0 || hash[val].empty()) return false;
-        int ridx = *(hash[val].begin()), last = nums.back();
+        if (!hashmap.count(val)) return false;
+        int cidx = *hashmap[val].begin(), lidx = nums.size()-1;
+        // update index
         
-        if (val == last) {
-            hash[last].erase(nums.size()-1);
-            nums.pop_back();
-        } else {
-            hash[last].insert(ridx);
-            hash[last].erase(nums.size()-1);
-            hash[val].erase(ridx);
-            nums[ridx] = last;
-            nums.pop_back();
+        // case 1: nums[cidx] == nums[lidx] but cidx != lidx
+        // case 2: cidx == lidx
+        if (nums[cidx] != nums[lidx]) {
+            hashmap[nums[lidx]].erase(lidx);
+            hashmap[nums[lidx]].insert(cidx);
+
+            // swap
+            swap(nums[cidx], nums[lidx]);
         }
+        
+        // delete
+        hashmap[val].erase(cidx);
+        nums.pop_back();
+        if (hashmap[val].empty())
+            hashmap.erase(val);
+        
+        // cout << hashmap.size() << " " << nums.size() << endl;
+        // cout << nums.size() << endl;
         return true;
     }
     
     /** Get a random element from the collection. */
     int getRandom() {
-        return nums[rand()%nums.size()];
+        int ridx = rand() % nums.size();
+        return nums[ridx];
     }
+
 private:
-    unordered_map<int, unordered_set<int>> hash;
+    unordered_map<int, unordered_set<int>> hashmap;
     vector<int> nums;
 };
 
