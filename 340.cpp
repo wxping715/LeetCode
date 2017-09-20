@@ -11,24 +11,23 @@ Show Similar Problems*/
 
 class Solution {
 public:
-    int lengthOfLongestSubstringKDistinct(string s, int k) {
-        int lidx = 0, cidx = 0;
+    int lengthOfLongestSubstringKDistinct(string s, int k) { 
+        int l = 0, r = -1;
         unordered_map<char, int> hashmap;
         int res = 0;
-        while (cidx < s.length()) {
-            hashmap[s[cidx]]++;
+        while (r < s.length()) {
             if (hashmap.size() > k) {
-                res = max(res, cidx-lidx);
-                while (hashmap.size() > k) {
-                    hashmap[s[lidx]]--;
-                    if (hashmap[s[lidx]] == 0)
-                        hashmap.erase(s[lidx]);
-                    lidx++;
-                }
+                hashmap[s[l]]--;
+                if (hashmap[s[l]] == 0)
+                    hashmap.erase(s[l]);
+                l++;
+            } else {
+                res = max(r-l+1, res);
+                r++;
+                if (r < s.length())
+                    hashmap[s[r]]++;
             }
-            cidx++;
         }
-        res = max(res, cidx-lidx);
         return res;
     }
 };
