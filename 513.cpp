@@ -9,6 +9,8 @@
  */
 class Solution {
 public:
+    
+    // tranverse from right to left
     int findBottomLeftValue(TreeNode* root) {
         queue<TreeNode *> q;
         TreeNode* cur;
@@ -22,4 +24,7 @@ public:
         }
         return cur->val;
     }
+    
+    // tranverse from left to right
+    // keep the first value of each level
 };
