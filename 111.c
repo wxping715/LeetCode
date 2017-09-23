@@ -1,21 +1,35 @@
+/*
+Given a binary tree, find its minimum depth.
+
+The minimum depth is the number of nodes along the shortest path from the root node down to the nearest leaf node.
+*/
+
 /**
- * Definition for binary tree
+ * Definition for a binary tree node.
  * struct TreeNode {
  *     int val;
- *     struct TreeNode *left;
- *     struct TreeNode *right;
-  * };
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
  */
-int minDepth(struct TreeNode *root) {
-    
-    if(root == NULL) return 0;
-    if(root->left == NULL && root->right == NULL) return 1;
-    else if(root->left != NULL && root->right != NULL)
-    {
-        int l = minDepth(root->left) + 1;
-        int r = minDepth(root->right) + 1;
-        return l > r ? r : l;
+class Solution {
+public:
+    int minDepth(TreeNode* root) {
+        queue<pair<TreeNode*, int>> q;
+        if (!root) return 0;
+        q.emplace(root, 1);
+        while (!q.empty()) {
+            auto cur = q.front();
+            q.pop();
+            
+            if (!cur.first->left && !cur.first->right)
+                return cur.second;
+            
+            if (cur.first->left)
+                q.emplace(cur.first->left, cur.second+1);
+            if (cur.first->right)
+                q.emplace(cur.first->right, cur.second+1);
+        }
     }
-    else if(root->left != NULL) return minDepth(root->left) + 1;
-    else if(root->right != NULL) return minDepth(root->right) + 1;
-}
+};
