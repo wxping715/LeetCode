@@ -1,46 +1,66 @@
+/*
+Given a 2D board containing 'X' and 'O' (the letter O), capture all regions surrounded by 'X'.
+
+A region is captured by flipping all 'O's into 'X's in that surrounded region.
+
+For example,
+X X X X
+X O O X
+X X O X
+X O X X
+After running your function, the board should be:
+
+X X X X
+X X X X
+X X X X
+X O X X
+*/
+
 class Solution {
-    public:
-        typedef vector<vector<char> > BOARDTYPE;
-
-        void solve(BOARDTYPE &board) {
-            if (board.empty() || board[0].empty()) return;
-            int N = board.size(), M = board[0].size();
-            for (int i = 0; i < N; ++i)
-                for (int j = 0; j < M; ++j)
-                    if (i == 0 || j == 0 || i == N-1 || j == M-1)
-                        dfs(board, i, j); // you may call dfs or bfs here!
-            for (int i = 0; i < N; ++i)
-                for (int j = 0; j < M; ++j)
-                    board[i][j] = (board[i][j] == 'V') ? 'O' : 'X';
+public:
+    void solve(vector<vector<char>>& board) {
+        int n = board.size();
+        if (n == 0) return;
+        int m = board[0].size();
+        if (m == 0) return;
+        
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < m; j++)
+                if (i == 0 || j == 0 || i == n-1 || j == m-1)
+                    bfs(board, i, j);
+        
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < m; j++) {
+                if (board[i][j] == 'O')
+                    board[i][j] = 'X';
+                else if (board[i][j] == 'T')
+                    board[i][j] = 'O';
+            }
+    }
+    
+    void bfs(vector<vector<char>>& board, int x, int y) {
+        int ax[4] = {0, -1, 0, 1};
+        int ay[4] = {-1, 0, 1, 0};
+        int n = board.size(), m = board[0].size();
+        
+        if (board[x][y] != 'O') return;
+        board[x][y] = 'T';
+        
+        queue<pair<int,int>> q;
+        q.emplace(x, y);
+        while (!q.empty()) {
+            auto cur = q.front();
+            q.pop();
+            int x = cur.first, y = cur.second;
+            
+            
+            for (int i = 0; i < 4; i++) {
+                int r = x + ax[i], c = y + ay[i];
+                if (r < 0 || r >= n || c < 0 || c >= m || board[r][c] != 'O')
+                    continue;
+                board[r][c] = 'T';
+                q.emplace(r, c);
+            }
         }
-
-         void dfs(BOARDTYPE &board, int row, int col) {
-            int N = board.size(), M = board[0].size();
-            if (row < 0 || row >= N || col < 0 || col >= M) return;
-            if (board[row][col] != 'O') return;
-            stack<pair<int,int>> s;
-            s.push(make_pair(row,col));
-            board[row][col] = 'V';//把不需要更改的‘O’设为‘V’.
-            while(!s.empty()){
-                row = s.top().first;
-                col = s.top().second;
-                s.pop();
-                if(row+1<N && board[row+1][col]=='O'){
-                    s.push(make_pair(row+1,col));
-                    board[row+1][col]='V';
-                }
-                if(row-1>=0 && board[row-1][col]=='O'){
-                    s.push(make_pair(row-1,col));
-                    board[row-1][col]='V';
-                }
-                if(col+1<M && board[row][col+1]=='O'){
-                    s.push(make_pair(row,col+1));
-                    board[row][col+1]='V';
-                }
-                if(col-1<N && board[row][col-1]=='O'){
-                    s.push(make_pair(row,col-1));
-                    board[row][col-1]='V';
-                }
-            }//end while
-        }
-    };
+    }
+};
