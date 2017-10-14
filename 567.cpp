@@ -1,62 +1,41 @@
+/*
+Given two strings s1 and s2, write a function to return true if s2 contains the permutation of s1. In other words, one of the first string's permutations is the substring of the second string.
+
+Example 1:
+Input:s1 = "ab" s2 = "eidbaooo"
+Output:True
+Explanation: s2 contains one permutation of s1 ("ba").
+Example 2:
+Input:s1= "ab" s2 = "eidboaoo"
+Output: False
+*/
+
 class Solution {
 public:
-
-    /*
-    * O(m*n)
-    */
+    
     bool checkInclusion(string s1, string s2) {
-        vector<int> hash(26, 0);
-        int len1 = s1.length(), len2 = s2.length();
-        
-        if (len1 > len2) return false;
+        int hash[26] = {0}, current[26] = {0};
         for (char ch : s1)
             hash[ch-'a']++;
         
-        int i = 0;
-        vector<int> tmp = hash;
-        while (i+len1 <= len2) {
-            int j = 0;
-            for (j = 0; j < len1; j++) {
-                if (!tmp[s2[i+j]-'a']) break;
-                tmp[s2[i+j]-'a']--;
+        int l = 0, r = -1;
+        while (r < (int)s2.length()) {
+            if (contain(hash, current)) {
+                if (r-l+1 == s1.length()) return true;
+                current[s2[l++]-'a']--;
+            } else {
+                r++;
+                if (r < s2.length())
+                    current[s2[r]-'a']++;
             }
-            
-            if (j >= len1) return true;
-            
-            if (!hash[s2[i+j]-'a']) i += j+1;
-            else i++;
-            tmp = hash;
         }
         return false;
     }
     
-    
-    /*
-    * O(n)
-    */
-    bool checkInclusion(string s1, string s2) {
-        int l = 0, r = 0;
-        vector<int> hash(26, 0), cur(26, 0);
-        if (s1.length() > s2.length()) return false;
-        
-        for (char ch : s1)
-            hash[ch-'a']++;
-        
-        while (r < s2.length()) {
-            cur[s2[r]-'a']++;
-            while (l <= r && !contain(hash, cur)) {
-                cur[s2[l++]-'a']--;
-            }
-            if (r-l+1 == s1.length()) return true;
-            r++;
-        }
-        return false;
-    }
-    
-    bool contain(vector<int>& hash, vector<int>& cur) {
-        for (int i = 0; i < 26; i++)
-            if (cur[i] > hash[i])
+    bool contain(int hash[26], int current[26]) {
+        for (int i = 0; i < 26; i++) 
+            if (current[i] < hash[i])
                 return false;
         return true;
-    }
+    } 
 };
