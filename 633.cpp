@@ -1,29 +1,25 @@
+/*
+Given a non-negative integer c, your task is to decide whether there're two integers a and b such that a2 + b2 = c.
+
+Example 1:
+Input: 5
+Output: True
+Explanation: 1 * 1 + 2 * 2 = 5
+Example 2:
+Input: 3
+Output: False
+*/
+
 class Solution {
 public:
     
-//     // O(sqrt(n)) time, O(sqrt(n)) space
-//     bool judgeSquareSum(int c) {
-//         int x = (int)sqrt(c);
-//         unordered_set<int> hashtable;
-        
-//         for (int i = 0; i <= x; i++)
-//             hashtable.insert(i*i);
-        
-//         for (int i = 0; i <= x; i++)
-//             if (hashtable.count(c-i*i))
-//                 return true;
-//         return false;
-//     }
-    
-    // // O(sqrt(n)) time, constant
-    bool judgeSquareSum(int c) {
-        int x = (int)sqrt(c);
-        int i = 0, j = x;
-        while (i <= j) {
-            int t = i*i + j*j;
-            if (t == c) return true;
-            else if (t < c) i++;
-            else j--;
+    bool judgeSquareSum(int c) { 
+        int l = 0, r = (int)sqrt(c);
+        while (l <= r) {
+            int v = l*l + r*r;
+            if (v < c) l += 1;
+            else if (v > c) r -= 1;
+            else return true;
         }
         return false;
     }
