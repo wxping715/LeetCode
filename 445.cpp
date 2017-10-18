@@ -1,3 +1,17 @@
+/*
+You are given two non-empty linked lists representing two non-negative integers. The most significant digit comes first and each of their nodes contain a single digit. Add the two numbers and return it as a linked list.
+
+You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+
+Follow up:
+What if you cannot modify the input lists? In other words, reversing the lists is not allowed.
+
+Example:
+
+Input: (7 -> 2 -> 4 -> 3) + (5 -> 6 -> 4)
+Output: 7 -> 8 -> 0 -> 7
+*/
+
 /**
  * Definition for singly-linked list.
  * struct ListNode {
@@ -8,82 +22,44 @@
  */
 class Solution {
 public:
-    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-        if (l1 == NULL) return l2;
-        if (l2 == NULL) return l1;
-        
-        int len1 = 0, len2 = 0;
-        ListNode *p1 = l1, *p2 = l2;
-        while (p1 != NULL) {
-            len1++;
-            p1 = p1->next;
-        }
-        while (p2 != NULL) {
-            len2++;
-            p2 = p2->next;
-        }
-        
-        ListNode *longl, *shortl;
-        if (len1 > len2) {
-            longl = l1;
-            shortl = l2;
-        } else {
-            longl = l2;
-            shortl = l1;
-        }
-        int diff = abs(len1-len2);
-        
-        p1 = longl, p2 = shortl;
-        ListNode *resl = NULL;
-        while (p1 != NULL) {
-            int val = diff > 0 ? p1->val : p1->val + p2->val;
-            p1 = p1->next;
-            if (diff <= 0) p2 = p2->next;
-            
-            ListNode *node = new ListNode(val);
-            node->next = resl;
-            resl = node;
-            diff--;
-        }
-        
-        // print(resl);
-        
-        int carry = 0;
-        p1 = resl;
-        while (p1 != NULL) {
-            int temp = carry;
-            carry = (p1->val+carry)/10;
-            p1->val = (temp+p1->val)%10;
-            p1 = p1->next;
-        }
-        resl = reverse(resl);
-        
-        if (carry != 0) {
-            ListNode* node = new ListNode(1);
-            node->next = resl;
-            resl = node;
-        }
-        return resl;
-    }
     
-    void print(ListNode *l1) {
-        ListNode* p = l1;
-        while (p != NULL) {
-            cout << p->val << " ";
+    // stack version
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        stack<ListNode*> s1, s2;
+        int carry = 0;
+        ListNode* head = NULL, *p;
+        
+        p = l1;
+        while (p) {
+            s1.push(p);
             p = p->next;
         }
-        cout << endl;
+        
+        p = l2;
+        while (p) {
+            s2.push(p);
+            p = p->next;
+        }
+        
+        while (!s1.empty() || !s2.empty() || carry != 0) {
+            if (!s1.empty()) {
+                carry += s1.top()->val;
+                s1.pop();
+            }
+            
+            if (!s2.empty()) {
+                carry += s2.top()->val;
+                s2.pop();
+            }
+            
+            ListNode* node = new ListNode(carry%10);
+            node->next = head;
+            head = node;
+            
+            carry = carry/10;
+        }
+        return head;
     }
     
-    ListNode* reverse(ListNode *l1) {
-        if (l1 == NULL || l1->next == NULL) return l1;
-        ListNode *nl = NULL, *p = l1, *q;
-        while (p != NULL) {
-            q = p->next;
-            p->next = nl;
-            nl = p;
-            p = q;
-        }
-        return nl;
-    }
+    // reverse version
 };
