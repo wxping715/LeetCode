@@ -1,41 +1,47 @@
-
 /*
-* add an attribute for each element to store the current minimul value.
+Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
+
+push(x) -- Push element x onto stack.
+pop() -- Removes the element on top of the stack.
+top() -- Get the top element.
+getMin() -- Retrieve the minimum element in the stack.
+Example:
+MinStack minStack = new MinStack();
+minStack.push(-2);
+minStack.push(0);
+minStack.push(-3);
+minStack.getMin();   --> Returns -3.
+minStack.pop();
+minStack.top();      --> Returns 0.
+minStack.getMin();   --> Returns -2.
 */
 
 class MinStack {
 public:
-    typedef pair<int, int> elem;
-    vector<elem> stack;
-    
     /** initialize your data structure here. */
     MinStack() {
         
     }
     
     void push(int x) {
-        if (stack.empty()) stack.push_back(make_pair(x,x));
-        else {
-            int minx = stack.back().second;
-            stack.push_back(make_pair(x, x < minx ? x : minx));
-        }
+        if (st.empty()) st.push({x,x});
+        else st.push({x, min(x, st.top().second)});
     }
     
     void pop() {
-        if (!stack.empty()) stack.pop_back();
+        st.pop();
     }
     
     int top() {
-        if (!stack.empty())
-            return stack.back().first;
-        return 0;
+        return st.top().first;
     }
     
     int getMin() {
-        if (!stack.empty())
-            return stack.back().second;
-        return 0;
+        return st.top().second;
     }
+    
+private:
+    stack<pair<int, int>> st;
 };
 
 /**
