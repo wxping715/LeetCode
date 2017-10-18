@@ -1,34 +1,34 @@
+/*
+Given numRows, generate the first numRows of Pascal's triangle.
+
+For example, given numRows = 5,
+Return
+
+[
+     [1],
+    [1,1],
+   [1,2,1],
+  [1,3,3,1],
+ [1,4,6,4,1]
+]
+*/
+
 class Solution {
 public:
-    vector<int> getRow(int rowIndex) {
-        vector<int> v0;
-    
-    vector<int> v1;
-    v1.push_back(1);
+    vector<vector<int>> generate(int numRows) {
+        if (numRows == 0) return {};
         
-    vector<int> v2;
-    v2.push_back(1);
-    v2.push_back(1);
-        
-    vector<int> pre;
-    vector<int> cur;
-        
-    if(rowIndex == 0) return v1;
-    if(rowIndex == 1) return v2;
-    
-    pre = v2;
-    for(int i = 2;i <= rowIndex;i++)
-    {
-        cur.clear();
-        cur.push_back(1);
-        for(int j = 1;j < i;j++)
-            cur.push_back(pre[j-1] + pre[j]);
-        cur.push_back(1);
-    
-        v0 = pre;
-        pre = cur;
-        cur = v0;
-    }
-    return pre;   
+        vector<vector<int>> result;
+        result.push_back({1});
+        for (int i = 2; i <= numRows; i++) {
+            vector<int> cur(i, 0);
+            for (int j = 0; j < i; j++) {
+                if (j == 0) cur[j] = result[i-2][j];
+                else if (j == i-1) cur[j] = result[i-2][j-1];
+                else cur[j] = result[i-2][j] + result[i-2][j-1];
+            }
+            result.push_back(cur);
+        }
+        return result;
     }
 };
