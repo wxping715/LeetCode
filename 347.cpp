@@ -1,47 +1,53 @@
 class Solution {
 public:
-    /*
-    * O(NlogK) algorithms:
-    * 1. firstly, scan the nums and count the frequency of numbers using hash_map, O(N)
-    * 2. using the heap of size k to find the k frequent elements.
-    */
-    typedef pair<int, int> mypair;
     
-    class Compare {
-        public:
-        bool operator() (mypair n1, mypair n2) {
-            return n1.second > n2.second;
-        }  
+    struct Comparsion {
+        bool operator() (const pair<int, int>& p1, const pair<int, int>& p2) {
+            return p1.second > p2.second;
+        }
     };
     
-    // typedef priority_queue<mypair> pqueue;
-    typedef priority_queue<mypair, vector<mypair>, Compare> pqueue;
     
+    // NlogK
     vector<int> topKFrequent(vector<int>& nums, int k) {
-        unordered_map<int, int> cnt;
-        unordered_map<int, int>::iterator it;
-        for (int i = 0;i < nums.size(); i++) {
-            it = cnt.find(nums[i]);
-            if (it == cnt.end()) cnt[nums[i]] = 1;
-            else it->second += 1;
-        }
+        unordered_map<int, int> hashmap;
+        for (int num : nums)
+            hashmap[num]++;
         
-        pqueue q;
-        for (it = cnt.begin(); it != cnt.end(); it++) {
-            cout << it->first << " " << it->second << endl;
-            if (q.size() < k) q.push(make_pair(it->first, it->second));
-            else {
-                q.push(make_pair(it->first, it->second));
-                q.pop();
-            }
+        priority_queue<pair<int, int>, vector<pair<int, int>>, Comparsion> pq;
+        for (auto it : hashmap) {
+            pq.push({it.first, it.second});
+            if (pq.size() > k)
+                pq.pop();
         }
         
         vector<int> res;
-        while (!q.empty()) {
-            res.push_back(q.top().first);
-            q.pop();
+        while (!pq.empty()) {
+            res.push_back(pq.top().first);
+            pq.pop();
         }
         reverse(res.begin(), res.end());
+        return res;
+    }
+    
+    // O(n) time, O(n) space
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        unordered_map<int, int> hashmap;
+        for (int num : nums)
+            hashmap[num]++;
+        
+        vector<vector<int>> bucket(nums.size()+1, vector<int>(0,0));
+        for (auto it : hashmap)
+            bucket[it.second].push_back(it.first);
+        
+        vector<int> res;
+        for (int i = nums.size(); i >= 1; i--) {
+            if (k == 0) break;
+            int size = min(k, (int)bucket[i].size());
+            for (int j = 0; j < size; j++)
+                res.push_back(bucket[i][j]);
+            k -= size;
+        }
         return res;
     }
 };
