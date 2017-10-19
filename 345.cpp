@@ -1,6 +1,19 @@
+/*
+Write a function that takes a string as input and reverse only the vowels of a string.
+
+Example 1:
+Given s = "hello", return "holle".
+
+Example 2:
+Given s = "leetcode", return "leotcede".
+
+Note:
+The vowels does not include the letter "y".
+*/
+
 class Solution {
 public:
-    /*
+    /* 
     * two pointers problem
     * p start from the head of string, q starts from the end of string
     *   1. when p and q are both vowels, the swap p and q;
