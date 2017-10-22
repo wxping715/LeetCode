@@ -1,35 +1,54 @@
+/*
+Given an encoded string, return it's decoded string.
+
+The encoding rule is: k[encoded_string], where the encoded_string inside the square brackets is being repeated exactly k times. Note that k is guaranteed to be a positive integer.
+
+You may assume that the input string is always valid; No extra white spaces, square brackets are well-formed, etc.
+
+Furthermore, you may assume that the original data does not contain any digits and that digits are only for those repeat numbers, k. For example, there won't be input like 3a or 2[4].
+
+Examples:
+
+s = "3[a]2[bc]", return "aaabcbc".
+s = "3[a2[c]]", return "accaccacc".
+s = "2[abc]3[cd]ef", return "abcabccdcdcdef".
+*/
+
 class Solution {
 public:
 
     /**
      * stack version 
      */
-    // string decodeString(string s) {
-    //     stack<int> num;
-    //     stack<string> str;
+    string decodeString(string s) {
+        stack<pair<int, string>> st;
         
-    //     int number = 0;
-    //     string cur_str = "";
-    //     for (char ch : s) {
-    //         if (isdigit(ch)) {
-    //             number = number * 10 + (ch-'0');
-    //         } else if (ch == '[') {
-    //             num.push(number);
-    //             str.push(cur_str);
-    //             number = 0;
-    //             cur_str = "";
-    //         } else if (ch == ']') {
-    //             int k = num.top(); num.pop();
-    //             string nstr = str.top(); str.pop();
-    //             while (k--) nstr += cur_str;
-                
-    //             cur_str = nstr;
-    //         } else {
-    //             cur_str.push_back(ch);
-    //         }
-    //     }
-    //     return cur_str;
-    // }
+        string cur = "", num = "";
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s[i];
+            if (ch == '[') {
+                st.push({stoi(num), cur});
+                num = ""; cur = "";
+            }
+            else if (ch == ']') {
+                auto top = st.top();
+                st.pop();
+                cur = top.second + copyString(cur, top.first);
+            }
+            else if (ch >= '0' && ch <= '9')
+                num.push_back(ch);
+            else 
+                cur.push_back(ch);
+        }
+        return cur;
+    }
+    
+    string copyString(string s, int t) {
+        string res = "";
+        while (t--)
+            res += s;
+        return res;
+    }
     
     
     /**
