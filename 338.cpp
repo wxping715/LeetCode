@@ -1,22 +1,33 @@
+/*
+Given a non negative integer number num. For every numbers i in the range 0 ≤ i ≤ num calculate the number of 1's in their binary representation and return them as an array.
+
+Example:
+For num = 5 you should return [0,1,1,2,1,2].
+
+Follow up:
+
+It is very easy to come up with a solution with run time O(n*sizeof(integer)). But can you do it in linear time O(n) /possibly in a single pass?
+Space complexity should be O(n).
+Can you do it like a boss? Do it without using any builtin function like __builtin_popcount in c++ or in any other language.
+Credits:
+Special thanks to @ syedee for adding this problem and creating all test cases.
+
+*/
+
 class Solution {
 public:
-    /*
-    * dp[i] means the numbers of 1 bit in i-th integers
-    * dp[i] = dp[i-2^j]+1 where 2^j < i
-    *       = 1 where 2^j = i
-    */
+    
+    // dp[i] = dp[i-2*k] + 1
     vector<int> countBits(int num) {
-        vector<int> dp(num+1, 0);
-        
-        int cure = 1;
-        dp[0] = 0;
+        vector<int> bits(num+1, 0);
+        int k = 1;
         for (int i = 1; i <= num; i++) {
-            if (2*cure == i) {
-                dp[i] = 1;
-                cure *= 2;
+            if (k == i) {
+                bits[i] = 1;
+                k *= 2;
             }
-            else dp[i] = dp[i-cure] + 1;
+            else bits[i] = bits[i-k/2] + 1;
         }
-        return dp;
+        return bits;
     }
 };
