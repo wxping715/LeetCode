@@ -1,2 +1,3 @@
 # LeetCode
-Codes for LeetCode OJ in C or C++.
+
+C++11 solutions for problems in Leetcode.
