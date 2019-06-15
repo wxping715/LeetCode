@@ -64,3 +64,40 @@ public:
         return max_len;
     }
 };
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    
+    int longest = 0;
+    public int longestUnivaluePath(TreeNode root) {
+        dfs(root);
+        return longest == 0 ? 0 : longest - 1;
+    }
+    
+    // only several cases to update the length
+    private int dfs(TreeNode root) {
+        if (root == null) return 0;
+        int left = dfs(root.left);
+        int right = dfs(root.right);
+        
+        int longestLength = 1, returnLength = 1;
+        if (root.right != null && root.right.val == root.val) {
+            longestLength += right;
+            returnLength = right + 1;
+        }
+        if (root.left != null && root.left.val == root.val) {
+            longestLength += left;
+            returnLength = Math.max(left + 1, returnLength);
+        }
+        longest = Math.max(longestLength, longest);
+        return returnLength;
+    }
+}
