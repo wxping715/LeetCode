@@ -53,52 +53,37 @@ The given binary tree has at least one tree node.
 
 /**
  * Definition for a binary tree node.
- * struct TreeNode {
+ * public class TreeNode {
  *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
- * };
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
  */
 class Solution {
-public:
-    
-    TreeNode* addOneRow(TreeNode* root, int v, int d) {
-        // ((current node, parent node), is_left)
-        queue<TreeNode*> q;
-        if (!root) return root;
-        
+    public TreeNode addOneRow(TreeNode root, int v, int d) {
         if (d == 1) {
-            TreeNode* newNode = new TreeNode(v);
-            newNode->left = root;
-            return newNode;
+            TreeNode node = new TreeNode(v);
+            node.left = root;
+            return node;
         }
-        
-        int l = 1;
-        q.push(root);
-        while (!q.empty()) {
-            int n = q.size();
-            while (n--) {
-                auto cur = q.front();
-                q.pop();
-                
-                if (l+1 == d) {
-                    TreeNode* newNode = new TreeNode(v);
-                    newNode->left = cur->left;
-                    cur->left = newNode;
-
-                    newNode = new TreeNode(v);
-                    newNode->right = cur->right;
-                    cur->right = newNode;   
-                    
-                } else {
-                    if (cur->left) q.push(cur->left);
-                    if (cur->right) q.push(cur->right);
-                }
-            }
-            if (l+1 == d) break;
-            l++;
-        }
+        dfs(root, v, d, 1);
         return root;
     }
-};
+    
+    void dfs(TreeNode root, int v, int d, int l) {
+        if (root == null) return;
+        if (l+1 < d) {
+            dfs(root.left, v, d, l+1);
+            dfs(root.right, v, d, l+1);
+            return;
+        }
+        
+        TreeNode newNode1 = new TreeNode(v);
+        newNode1.left = root.left;
+        TreeNode newNode2 = new TreeNode(v);
+        newNode2.right = root.right;
+        root.left = newNode1;
+        root.right = newNode2;
+    }
+}
