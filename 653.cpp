@@ -71,3 +71,18 @@ public:
         return false;
     }
 };
+
+class Solution {
+    public boolean findTarget(TreeNode root, int k) {
+        Set<Integer> hashset = new HashSet<>();
+        return find(root, k, hashset);
+    }
+    
+    private boolean find(TreeNode root, int k, Set<Integer> hashset) {
+        if (root == null) return false;
+        if (hashset.contains(k - root.val)) return true;
+        hashset.add(root.val);
+        
+        return find(root.left, k, hashset) || find(root.right, k, hashset);
+    }
+}
