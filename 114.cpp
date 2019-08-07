@@ -59,25 +59,30 @@ public:
     
     // iterative solution
     // preorder
-    void flatten(TreeNode* root) {
-        TreeNode* rear = NULL;
-        stack<TreeNode*> s;
-        if (root) s.push(root);
-        while (!s.empty()) {
-            auto cur = s.top();
-            s.pop();
-            
-            if (cur->right) s.push(cur->right);
-            if (cur->left) s.push(cur->left);
-            
-            cur->left = NULL;
-            cur->right = NULL;
-            
-            if (rear) {
-                rear->right = cur;
-                rear = cur;
+    /**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public void flatten(TreeNode root) {
+        Deque<TreeNode> deque = new LinkedList<>();
+        TreeNode p = root, curr = null;
+        while (p != null || !deque.isEmpty()) {
+            while (p != null) {
+                deque.offerLast(p.right);
+                TreeNode left = p.left;
+                p.left = p.right = null;
+                if (curr != null) curr.right = p;
+                curr = p;
+                p = left;
             }
-            else rear = cur;
+            p = deque.pollLast();
         }
     }
+}
 };
