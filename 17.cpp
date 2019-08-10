@@ -1,35 +1,33 @@
 class Solution {
-public:
-    
-    char cmap[10][10] = {"","","abc","def","ghi","jkl","mno","pqrs","tuv","wxyz"};
-    int total[10] = {0,0,3,3,3,3,3,4,3,4};
-    
-    vector<string> letterCombinations(string digits) {
-        int now[10] = {0};
-        int len = digits.length();
-        vector<string> res;
+    public List<String> letterCombinations(String digits) {
+        if (digits.length() == 0) return Collections.emptyList();
         
-        if(len < 1) return res;
+        List<String> map = new ArrayList<>(Arrays.asList(
+            "",
+            "",
+            "abc",
+            "def",
+            "ghi",
+            "jkl",
+            "mno",
+            "pqrs",
+            "tuv",
+            "wxyz"
+        ));
         
-        while(true){
-            string s = "";
-            for(int i = 0;i < len;i++)
-                s.insert(s.length(),1,cmap[digits[i]-'0'][now[i]]);
-            res.push_back(s);
-            
-            int k = len - 1;
-            while(k >= 0){
-                if(now[k] < total[digits[k]-'0']-1){
-                    now[k]++;
-                    break;
-                }else{
-                    now[k] = 0;
-                    k--;
+        Queue<String> queue = new LinkedList<>();
+        queue.offer("");
+        for (int i = 0; i < digits.length(); i++) {
+            int d = digits.charAt(i) - '0';
+            char[] chars = map.get(d).toCharArray();
+            int n = queue.size();
+            while (n-- > 0) {
+                String poll = queue.poll();
+                for (char ch : chars) {
+                    queue.offer(poll + ch);
                 }
             }
-            if(k < 0) break;
         }
-        
-        return res;
+        return new ArrayList<>(queue);
     }
-};
+}
