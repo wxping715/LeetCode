@@ -16,18 +16,13 @@ Special thanks to @ts for adding this problem and creating all test cases.
 */
 
 class Solution {
-public:
-    int findPeakElement(vector<int>& nums) {
-        int l = 0, r = nums.size()-1;
+    public int findPeakElement(int[] nums) {
+        int l = 0, r = nums.length - 1;
         while (l < r) {
-            // m <= r
-            int m = (r+l)/2;
-            
-            if (nums[m] < nums[m+1])
-                l = m+1;
-            else
-                r = m;
+            int m = (r-l)/2 + l;
+            if (nums[m] > nums[m+1]) r = m;
+            else l = m + 1;
         }
         return l;
     }
-};
+}
